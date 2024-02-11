@@ -45,8 +45,8 @@ class Play:
                                     )
         self.choose_heading.grid(row=0)
 
-        instructions = "Choose one of the colours below. When you choo" \
-                       "a colour, the computer's choice and the results" \
+        instructions = "Choose one of the colours below. When you choose " \
+                       "a colour, the computer's choice and the results " \
                        "the round will be revealed."
 
         self.instructions_label = Label(self.quest_frame, text=instructions,
@@ -79,7 +79,7 @@ class Play:
         # frame to include round results and next button
         self.rounds_frame = Frame(self.quest_frame)
         self.rounds_frame.grid(row=4, pady=5)
-        self.round_results_label = Label(self.rounds_frame, text=f"Round",
+        self.round_results_label = Label(self.rounds_frame, text=f"Round 1",
                                          width=32, bg="#FFF2CC",
                                          font=("Arial", 10),
                                          pady=5)
@@ -92,7 +92,7 @@ class Play:
         self.next_button.grid(row=0, column=1)
         # large label to show overall game results
         self.game_results_label = Label(self.quest_frame,
-                                        text="Game Totals: User:",
+                                        text="Game Totals: User:    Computer:",
                                         bg="#FFF2CC", padx=10, pady=10,
                                         font=("Arial", "10"), width=42)
         self.game_results_label.grid(row=5, pady=5)

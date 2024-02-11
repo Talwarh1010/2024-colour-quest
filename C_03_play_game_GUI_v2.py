@@ -4,42 +4,11 @@ import csv
 import random
 
 
+# users choose 3, 5 or 10 rounds
 class ChooseRounds:
-
     def __init__(self):
-        button_font = ("Arial", "13", "bold")
-        button_fg = "#FFFFFF"
-        self.intro_frame = Frame(padx=10, pady=10)
-        self.intro_frame.grid()
-        self.colour_frame = Frame(self.intro_frame)
-        self.colour_frame.grid(row=2)
-        self.colour_heading = Label(self.intro_frame,
-                                    text="Colour Quest",
-                                    font=("Arial", "16", "bold")
-                                    )
-        self.colour_heading.grid(row=0)
-
-        instructions = "In each round you will be given six different colours to choose from. Pick a colour" \
-                       " and see if you can beat the computer's score!" \
-                       " \nTo begin, choose how many rounds you'd like to play..."
-        self.display_instructions = Label(self.intro_frame,
-                                          text=instructions,
-
-                                          wraplength=300,
-                                          justify="left")
-
-        self.display_instructions.grid(row=1)
-
-        btn_colour_value = [["#CC0000", 3], ["#009900", 5], ["#000099", 10]]
-        for item in range(0, 3):
-            self.rounds_button = Button(self.colour_frame,
-                                        fg=button_fg,
-                                        bg=btn_colour_value[item][0],
-                                        text="{} Rounds".format(btn_colour_value[item][1]),
-                                        font=button_font, width=10,
-                                        command=lambda i=item: self.to_play(btn_colour_value[i][1]))
-            self.rounds_button.grid(row=0, column=item,
-                                    padx=5, pady=5)
+        # invoke play class with three rounds for testing purposes.
+        self.to_play(3)
 
     def to_play(self, num_rounds):
         Play(num_rounds)
@@ -108,7 +77,7 @@ class Play:
         # frame to include round results and next button
         self.rounds_frame = Frame(self.quest_frame)
         self.rounds_frame.grid(row=4, pady=5)
-        self.round_results_label = Label(self.rounds_frame, text=f"Round 1: User: -  Computer: -",
+        self.round_results_label = Label(self.rounds_frame, text=f"Round 1",
                                          width=32, bg="#FFF2CC",
                                          font=("Arial", 10),
                                          pady=5)
@@ -117,7 +86,7 @@ class Play:
         self.next_button = Button(self.rounds_frame, text="Next Round",
                                   fg="#FFFFFF", bg="#008BFC",
                                   font=("Arial", 11, "bold"),
-                                  width=10, state=DISABLED, command=self.new_round)
+                                  width=10, state=DISABLED,  command=self.new_round)
         self.next_button.grid(row=0, column=1)
 
         self.new_round()
@@ -147,6 +116,11 @@ class Play:
             self.make_control_button.grid(row=0, column=item, padx=5, pady=5)
 
             self.control_button_ref.append(self.make_control_button)
+
+    def close_play(self):
+        # reshow root (ie: choose rounds) and end current
+        # game / allow new game to start
+        root.destroy()
 
     def get_all_colours(self):
         file = open("00_colour_list_hex_v3.csv", "r")
@@ -295,12 +269,6 @@ class Play:
 
     def get_help(self):
         print("You chose to get help")
-
-    def close_play(self):
-        # reshow root (ie: choose rounds) and end current
-        # game / allow new game to start
-        root.deiconify()
-        self.play_box.destroy()
 
 
 if __name__ == "__main__":
