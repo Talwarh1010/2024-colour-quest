@@ -148,6 +148,9 @@ class Play:
 
             self.control_button_ref.append(self.make_control_button)
 
+        # disable help button
+        self.to_help_btn = self.control_button_ref[0]
+
     def get_all_colours(self):
         file = open("00_colour_list_hex_v3.csv", "r")
         var_all_colors = list(csv.reader(file, delimiter=","))
@@ -284,7 +287,7 @@ class Play:
     def to_do(self, action):
 
         if action == "get help":
-            self.get_help()
+            DisplayHelp(self)
         elif action == "get stats":
             self.get_stats()
         else:
@@ -293,14 +296,63 @@ class Play:
     def get_stats(self):
         print("You chose to get the statistics")
 
-    def get_help(self):
-        print("You chose to get help")
-
     def close_play(self):
         # reshow root (ie: choose rounds) and end current
         # game / allow new game to start
         root.deiconify()
         self.play_box.destroy()
+
+
+class DisplayHelp:
+    def __init__(self, partner):
+        # setup dialogue box and background colour
+        background = "#ffe6cc"
+        self.help_box = Toplevel()
+        # disable help button
+        partner.to_help_btn.config(state=DISABLED)
+        # If users press cross at top, closes help and
+        # 'releases' help button
+        self.help_box.protocol('WM_DELETE WINDOW',
+                               partial(self.close_help, partner))
+        self.help_frame = Frame(self.help_box, width=300,
+                                height=200,
+                                bg=background)
+        self.help_frame.grid()
+        self.help_heading_label = Label(self.help_frame,
+                                        bg=background,
+                                        text="Help / Hints",
+                                        font=("Arial", "14", "bold"))
+        self.help_heading_label.grid(row=0)
+        help_text = (""" Your goal in this game is to beat the computer and you have an
+advantage - you get to choose your colour first. The points
+associated with the colours are based on the colour's hex code.\n
+The higher the value of the colour, the greater your score. To see
+your statistics, click on the 'Statistics' button.\n
+Win the game by scoring more than the computer overall. Don't
+be discouraged if you don't win every round, it's your overall
+score that counts. \n
+
+Good luck! Choose carefully.""")
+
+        self.help_text_label = Label(self.help_frame, bg=background,
+                                     text=help_text, wrap=350,
+                                     justify="left")
+        self.help_text_label.grid(row=1, padx=10)
+
+        self.dismiss_button = Button(self.help_frame,
+                                     font=("Arial", "12", "bold"),
+                                     text="Dismiss", bg="#CC6600",
+                                     fg="#FFFFFF",
+                                     command=partial(self.close_help,
+                                                     partner))
+
+        self.dismiss_button.grid(row=2, padx=10, pady=10)
+
+    # closes help dialogue (used by button and x at top of dialogue)
+    def close_help(self, partner):
+        # Put help button back to normal...
+        partner.to_help_btn.config(state=NORMAL)
+        self.help_box.destroy()
 
 
 if __name__ == "__main__":
