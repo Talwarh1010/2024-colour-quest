@@ -19,6 +19,8 @@ class ChooseRounds:
 class Play:
     def __init__(self, how_many):
         self.play_box = Toplevel()
+        user_scores = [20, 14, 14, 13, 14, 11, 20, 10, 20, 11]
+        computer_scores = [12, 4, 6, 20, 20, 14, 10, 14, 16, 12]
         self.quest_frame = Frame(self.play_box, padx=10, pady=10)
         self.quest_frame.grid()
         self.control_frame = Frame(self.quest_frame)
@@ -40,13 +42,13 @@ class Play:
             self.make_control_button.grid(row=0, column=item, padx=5, pady=5)
 
             self.control_button_ref.append(self.make_control_button)
-        self.to_stats_btn = self.control_button_ref[0]
+        self.to_stats_btn = self.control_button_ref[1]
 
     def to_do(self, action):
 
         if action == "get stats":
             Displaystats(self, self.user_scores, self.computer_scores)
-        elif action == "get stats":
+        elif action == "get help":
             pass
         else:
             self.close_play()
@@ -55,7 +57,7 @@ class Play:
 class DisplayStats:
     def __init__(self, partner, user_scores, computer_scores):
         # setup dialogue box and background colour
-        background = "#ffe6cc"
+        stats_bg_colour = "#DAE8FC"
         self.stats_box = Toplevel()
         # disable stats button
         partner.to_stats_btn.config(state=DISABLED)
