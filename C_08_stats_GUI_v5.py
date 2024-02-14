@@ -19,14 +19,14 @@ class ChooseRounds:
 class Play:
     def __init__(self, how_many):
         self.play_box = Toplevel()
-        user_scores = [20, 14, 14, 13, 14, 11, 20, 10, 20, 11]
-        computer_scores = [12, 4, 6, 20, 20, 14, 10, 14, 16, 12]
+        self.user_scores = [20, 14, 14, 13, 14, 11, 20, 10, 20, 11]
+        self.computer_scores = [12, 4, 6, 20, 20, 14, 10, 14, 16, 12]
         self.quest_frame = Frame(self.play_box, padx=10, pady=10)
         self.quest_frame.grid()
         self.control_frame = Frame(self.quest_frame)
         self.control_frame.grid(row=6)
         control_buttons = [
-            ["#CC6600", "stats", "get stats"],
+            ["#CC6600", "Help", "get help"],
             ["#004C99", "Statistics", "get stats"],
             ["#808080", "Start Over", "start over"]]
 
@@ -47,7 +47,7 @@ class Play:
     def to_do(self, action):
 
         if action == "get stats":
-            Displaystats(self, self.user_scores, self.computer_scores)
+            DisplayStats(self, self.user_scores, self.computer_scores)
         elif action == "get help":
             pass
         else:
@@ -67,28 +67,42 @@ class DisplayStats:
                                 partial(self.close_stats, partner))
         self.stats_frame = Frame(self.stats_box, width=300,
                                  height=200,
-                                 bg=background)
+                                 bg=stats_bg_colour)
         self.stats_frame.grid()
         self.stats_heading_label = Label(self.stats_frame,
-                                         bg=background,
-                                         text="stats / Hints",
+                                         bg=stats_bg_colour,
+                                         text="Statistics",
                                          font=("Arial", "14", "bold"))
         self.stats_heading_label.grid(row=0)
-        stats_text = (""" Your goal in this game is to beat the computer and you have an
-advantage - you get to choose your colour first. The points
-associated with the colours are based on the colour's hex code.\n
-The higher the value of the colour, the greater your score. To see
-your statistics, click on the 'Statistics' button.\n
-Win the game by scoring more than the computer overall. Don't
-be discouraged if you don't win every round, it's your overall
-score that counts. \n
+        stats_text = "Here are your game statistics"
 
-Good luck! Choose carefully.""")
-
-        self.stats_text_label = Label(self.stats_frame, bg=background,
+        self.stats_text_label = Label(self.stats_frame, bg=stats_bg_colour,
                                       text=stats_text, wrap=350,
                                       justify="left")
         self.stats_text_label.grid(row=1, padx=10)
+
+        self.data_frame = Frame(self.stats_frame, bg=stats_bg_colour, borderwidth=1, relief="solid")
+        self.data_frame.grid(row=2, padx=10, pady=10)
+        self.user_stats = self.get_stats(user_scores, "User")
+        self.comp_stats = self.get_stats(computer_scores, "Computer")
+        head_back = "#FFFFFF"
+        odd_rows = "#C9D6E8"
+        even_rows = stats_bg_colour
+        row_names = ["", "Total", "Best Score", "Worst Score", "Average Score"]
+        row_formats = [head_back, odd_rows, even_rows, odd_rows, even_rows]
+        all_labels = []
+        count = 0
+
+        for item in range(0, len(self.user_stats)):
+            all_labels.append([row_names[item], row_formats[count]])
+            all_labels.append([self.user_stats[item], row_formats[count]])
+            all_labels.append([self.comp_stats[item], row_formats[count]])
+            count += 1
+
+        for item in range(0, len(all_labels)):
+            self.data_label = Label(self.data_frame, text=all_labels[item][0], bg=all_labels[item][1], width="10",
+                                    height="2", padx=10)
+            self.data_label.grid(row=item // 3, column=item % 3, padx=0, pady=0)
 
         self.dismiss_button = Button(self.stats_frame,
                                      font=("Arial", "12", "bold"),
@@ -97,7 +111,16 @@ Good luck! Choose carefully.""")
                                      command=partial(self.close_stats,
                                                      partner))
 
-        self.dismiss_button.grid(row=2, padx=10, pady=10)
+        self.dismiss_button.grid(row=5, padx=10, pady=10)
+
+    @staticmethod
+    def get_stats(score_list, entity):
+        total_score = sum(score_list)
+        best_score = max(score_list)
+        worst_score = min(score_list)
+        average = total_score / len(score_list)
+
+        return [entity, total_score, best_score, worst_score, average]
 
     # closes stats dialogue (used by button and x at top of dialogue)
     def close_stats(self, partner):
